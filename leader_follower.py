@@ -12,16 +12,12 @@ def find_leader(obj1_cord,obj2_cord):
 
     output: "No vehicle moved" or "Vehicles moving opposite" or "Second vehicle" or "First vehicle"
     """
-    dis_1_2=haversine_dist(obj1_cord[0],obj2_cord[1])
-    dis_2_1=haversine_dist(obj2_cord[0],obj1_cord[1])
-    dist_1_1=haversine_dist(obj1_cord[0],obj1_cord[1])
-    dist_2_2=haversine_dist(obj2_cord[0],obj2_cord[1])
-    
-    if dist_1_1==0 and dist_2_2==0:
+
+    if haversine_dist(obj1_cord[0],obj1_cord[1])==0 and haversine_dist(obj2_cord[0],obj2_cord[1])==0:
         return 'No vehicle moved'
     elif  get_angle(obj1_cord,obj2_cord) >90:
         return 'Vehicles moving opposite'
-    elif dis_1_2>dis_2_1:
+    elif haversine_dist(obj1_cord[0],obj2_cord[1])>haversine_dist(obj2_cord[0],obj1_cord[1]):
         return 'Second vehicle'
     else :
         return 'First vehicle'
@@ -38,18 +34,13 @@ def find_leader_full_data(traj1,traj2):
     """ input: is two tragentroy as pandas dataframe format 
         returns: is which one is the leader as a dataframe"""
 
-    tr1_time=traj1['Time (s)']
-    tr2_time=traj2['Time (s)']
-    overlapped_timestamps=list(set(list(tr1_time)).intersection(list(tr2_time)))
+    overlapped_timestamps=list(set(list(traj1['Time (s)'])).intersection(list(traj2['Time (s)'])))
     overlapped_timestamps.sort()
     leader_list=[]
     for i in range(len(overlapped_timestamps)-1):
-        obj1_t1=get_cords(traj1,overlapped_timestamps[i])
-        obj2_t1=get_cords(traj2,overlapped_timestamps[i])
-        obj1_t2=get_cords(traj1,overlapped_timestamps[i+1])
-        obj2_t2=get_cords(traj2,overlapped_timestamps[i+1])
 
-        leader_obj=find_leader((obj1_t1,obj1_t2),(obj2_t1,obj2_t2))
+        leader_obj=find_leader((get_cords(traj1,overlapped_timestamps[i]),get_cords(traj1,overlapped_timestamps[i+1])),
+                                (get_cords(traj2,overlapped_timestamps[i]),get_cords(traj2,overlapped_timestamps[i+1])))
         leader_list.append([overlapped_timestamps[i],leader_obj])
     return pd.DataFrame(leader_list,columns=['overlapped time', 'Leader'])
 
