@@ -11,12 +11,12 @@ to get the leader in each timestamp run
    python leader_follower.py path_to/trajectory1.csv pathto/trajectory2.csv
 ```
 
-to get the TTC in each timestamp run
+to get the Minimum TTC
 ```bash
    python TTC.py path_to/trajectory1.csv pathto/trajectory2.csv
 ```
 
-here the data needs to be in the format
+here the data needs to be in the format(CSV)
 
 <!-- Tables -->
 | Time (s)     | Latitude          | Longitude|
