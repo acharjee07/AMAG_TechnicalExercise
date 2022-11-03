@@ -25,7 +25,7 @@ def haversine_dist(c1, c2):
   
 
 
-    # print(f"Distance: {meters} m")
+
 
     return meters
    
@@ -62,7 +62,12 @@ def get_cartesian(cord):
     x = R * np.cos(lat) * np.cos(lon)
     y = R * np.cos(lat) * np.sin(lon)
     z = R *np.sin(lat)
+
     return np.array([x,y,z])
+
+
+
+
 def get_angle(obj1_cord,obj2_cord):
     """ determines the angel btween two vector given the starting and ending coordinate of the vectors"""
     
@@ -75,5 +80,9 @@ def get_angle(obj1_cord,obj2_cord):
     vec1=vec1_2-vec1_1
     vec2=vec2_2-vec2_1
 
-    angle=(np.arccos((np.dot(vec1,vec2))/(np.linalg.norm(vec1)*np.linalg.norm(vec2)))*180/np.pi)
+    if np.linalg.norm(vec1)*np.linalg.norm(vec2)==0:
+        angle=0
+    else:
+        angle=(np.arccos((np.dot(vec1,vec2))/(np.linalg.norm(vec1)*np.linalg.norm(vec2)))*180/np.pi)
+    
     return angle
