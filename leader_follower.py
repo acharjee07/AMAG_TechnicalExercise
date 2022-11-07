@@ -1,26 +1,33 @@
 
 import pandas as pd
-import math
 from utils import haversine_dist,get_angle
 import argparse
 
 
-def find_leader(obj1_cord,obj2_cord):
+result_str_dict={
+    -1: 'Vehicles moving opposite',
+     0: 'No vehicle moved',
+     1: 'First vehicle',
+     2: 'Second vehicle',
+     3: " Minimum TTC is not applicable for the trajectories"
+}
+
+def find_leader(veh1_cord,veh2_cord,result_str_dict):
     """ finds the leader by applying some vector analogy,
     input geo cordinate is in shape (latitude and longitude) of two timestamps
-    input:(((obj1 time1 lat,obj1 time1 long),(obj1 time2 lat,obj1 time2 long)),((obj2 time1 lat,obj2 time1 long),(obj2 time2 lat,obj2 time2 long)))
+    input:(((veh1 time1 lat,veh1 time1 long),(veh1 time2 lat,veh1 time2 long)),((veh2 time1 lat,veh2 time1 long),(veh2 time2 lat,veh2 time2 long)))
 
     output: "No vehicle moved" or "Vehicles moving opposite" or "Second vehicle" or "First vehicle"
     """
 
-    if haversine_dist(obj1_cord[0],obj1_cord[1])==0 and haversine_dist(obj2_cord[0],obj2_cord[1])==0:
-        return 'No vehicle moved'
-    elif  get_angle(obj1_cord,obj2_cord) >90:
-        return 'Vehicles moving opposite'
-    elif haversine_dist(obj1_cord[0],obj2_cord[1])>haversine_dist(obj2_cord[0],obj1_cord[1]):
-        return 'Second vehicle'
+    if haversine_dist(veh1_cord[0],veh1_cord[1])==0 and haversine_dist(veh2_cord[0],veh2_cord[1])==0:
+        return result_str_dict[0]
+    elif  get_angle(veh1_cord,veh2_cord) >90:
+        return result_str_dict[-1]
+    elif haversine_dist(veh1_cord[0],veh2_cord[1])>haversine_dist(veh2_cord[0],veh1_cord[1]):
+        return result_str_dict[2]
     else :
-        return 'First vehicle'
+        return result_str_dict[1]
 
 
 def get_cords(trag,time):
@@ -40,9 +47,10 @@ def find_leader_full_data(traj1,traj2):
     for i in range(len(overlapped_timestamps)-1):
 
         leader_obj=find_leader((get_cords(traj1,overlapped_timestamps[i]),get_cords(traj1,overlapped_timestamps[i+1])),
-                                (get_cords(traj2,overlapped_timestamps[i]),get_cords(traj2,overlapped_timestamps[i+1])))
+                                (get_cords(traj2,overlapped_timestamps[i]),get_cords(traj2,overlapped_timestamps[i+1])),
+                                result_str_dict)
         leader_list.append([overlapped_timestamps[i],leader_obj])
-    return pd.DataFrame(leader_list,columns=['overlapped time', 'Leader'])
+    return leader_list
 
 
 if __name__ == "__main__":
@@ -53,7 +61,8 @@ if __name__ == "__main__":
     trag1=pd.read_csv(args.trajectory1)
     trag2=pd.read_csv(args.trajectory2)
 
-    print(find_leader_full_data(trag1,trag2))
+    print(pd.DataFrame(find_leader_full_data(trag1,trag2),columns=['overlapped time', 'Leader']))
+    
 
 
 

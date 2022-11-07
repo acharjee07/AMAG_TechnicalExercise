@@ -44,12 +44,13 @@ def get_angle(obj1_cord,obj2_cord):
     vec2_2=get_cartesian(obj2_cord[1])
 
     vec1=vec1_2-vec1_1
-    vec2=vec2_2-vec2_1
+    vec2=vec2_2-vec2_1  
 
     if np.linalg.norm(vec1)*np.linalg.norm(vec2)==0:
         angle=0            # here the angle is not zero if one vehicle angle is not moving there is no logical angle
                             # to ensure the further logic, the angle is assumed to be 0
     else:                  
-        angle=(np.arccos((np.dot(vec1,vec2))/(np.linalg.norm(vec1)*np.linalg.norm(vec2)))*180/np.pi)
+        angle=(np.arccos(round((np.dot(vec1,vec2))/(np.linalg.norm(vec1)*np.linalg.norm(vec2)),2))*180/np.pi)
     
     return angle
+

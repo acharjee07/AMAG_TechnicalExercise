@@ -2,6 +2,7 @@ from utils import haversine_dist
 from leader_follower import find_leader, get_cords
 import pandas as pd
 import argparse
+from leader_follower import result_str_dict
 
 
 def get_TTC(obj1_cord,obj2_cord,time):
@@ -12,7 +13,7 @@ def get_TTC(obj1_cord,obj2_cord,time):
     output:   TTC if TTC is applicable in the case where TTC not applicable returns None
     
     """
-    leader_vehicle=find_leader((obj1_cord[0],obj1_cord[1]),( obj2_cord[0], obj2_cord[1]))
+    leader_vehicle=find_leader((obj1_cord[0],obj1_cord[1]),( obj2_cord[0], obj2_cord[1]),result_str_dict)
     xij=haversine_dist(obj1_cord[1], obj2_cord[1])
     dis_traveled_obj1=haversine_dist(obj1_cord[0],obj1_cord[1])
     dis_traveled_obj2=haversine_dist(  obj2_cord[0],obj2_cord[1])
@@ -20,14 +21,14 @@ def get_TTC(obj1_cord,obj2_cord,time):
     speed_obj2=dis_traveled_obj2/time
 
     TTC=None
-    if leader_vehicle=='Second vehicle':
+    if leader_vehicle==result_str_dict[2]:
         speed_diff=speed_obj1-speed_obj2
         if speed_diff>0:
-            TTC=(xij-3)/speed_diff
-    elif leader_vehicle=='First vehicle':
+            TTC=round((xij-3)/speed_diff,3)
+    elif leader_vehicle==result_str_dict[1]:
         speed_diff=speed_obj2-speed_obj1
         if speed_diff>0:
-            TTC=TTC=(xij-3)/speed_diff
+            TTC=round((xij-3)/speed_diff,3)
     return TTC
 
 
@@ -49,12 +50,12 @@ def get_TTC_fulldata(trag1,trag2):
 
     # after removing all the nan valuse if no TTC is left then minimum ttc is not applicable
     if len(TTC_df)==0:                                  
-        return " Minimum TTC is not applicable for the trajectories"
+        return result_str_dict[3]
     
     else:
         min_TTC=min(TTC_df['TTC'])
         min_TTC_time=TTC_df[TTC_df['TTC']==min_TTC]['Time'].values[0]
-        return f'Minimum TTC is {min_TTC} at time {min_TTC_time}s'
+        return min_TTC, min_TTC_time
 
 
 if __name__ == "__main__":
@@ -65,4 +66,5 @@ if __name__ == "__main__":
     trag1=pd.read_csv(args.trajectory1)
     trag2=pd.read_csv(args.trajectory2)
 
-    print(get_TTC_fulldata(trag1,trag2))
+    min_TTC, min_TTC_time=get_TTC_fulldata(trag1,trag2)
+    print(f'Minimum TTC is {min_TTC} at time {min_TTC_time}s')
