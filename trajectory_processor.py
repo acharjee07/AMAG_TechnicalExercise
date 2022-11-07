@@ -1,10 +1,6 @@
-
 import pandas as pd
 from utils import CoordinateProcessor
 import argparse
-
-
-
 
 
 class TrajectoryProcessor():
@@ -93,10 +89,10 @@ class TrajectoryProcessor():
         TTC_list=[]
 
         ## ttc for the first time stap can not be calculated as the velocity can not be determined
-        for i in range(1,len(overlapped_timestamps)):        
-            TTC=self.get_TTC_single_timestamp((self.get_cords(trag1,overlapped_timestamps[i-1]),self.get_cords(trag1,overlapped_timestamps[i])),
-                    (self.get_cords(trag2,overlapped_timestamps[i-1]),self.get_cords(trag2,overlapped_timestamps[i])),
-                    overlapped_timestamps[i]-overlapped_timestamps[i-1])
+        for i in range(0,len(overlapped_timestamps)-1):        
+            TTC=self.get_TTC_single_timestamp((self.get_cords(trag1,overlapped_timestamps[i]),self.get_cords(trag1,overlapped_timestamps[i+1])),
+                    (self.get_cords(trag2,overlapped_timestamps[i]),self.get_cords(trag2,overlapped_timestamps[i+1])),
+                    overlapped_timestamps[i+1]-overlapped_timestamps[i])
 
             TTC_list.append([overlapped_timestamps[i],TTC])
 
@@ -104,7 +100,7 @@ class TrajectoryProcessor():
 
         # after removing all the nan valuse if no TTC is left then minimum ttc is not applicable
         if len(TTC_df)==0:                                  
-            return self.result_str_dict[3]
+            return self.result_str_dict[3], 'None'
         
         else:
             min_TTC=min(TTC_df['TTC'])
@@ -127,11 +123,11 @@ if __name__ == "__main__":
   
 
     processor=TrajectoryProcessor()
-
+    print('Leader for the overlapped timestamps:')
     print(pd.DataFrame(processor.get_leader_full_timestamp(trag1,trag2),columns=['overlapped time', 'Leader']), '\n')
     
     min_TTC, min_TTC_time=processor.get_TTC_full_timestamp(trag1,trag2)
-    print(f'Minimum TTC is {min_TTC} at time {min_TTC_time}s')
+    print(f'Minimum TTC is {min_TTC} at time {min_TTC_time} s')
     
 
 

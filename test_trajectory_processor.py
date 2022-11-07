@@ -56,10 +56,10 @@ class TestProcessor(unittest.TestCase):
 
         self.assertEqual(processor.get_TTC_full_timestamp(pd.DataFrame([[0,0,0],[1,1,0],[2,2,0]],columns=['Time (s)','Latitude','Longitude']),
                                                 pd.DataFrame([[0,0,0],[1,1,0],[2,2,0]],columns=['Time (s)','Latitude','Longitude'])),
-                                                result_str_dict[3])
+                                                (result_str_dict[3],'None'))
         self.assertEqual(processor.get_TTC_full_timestamp(pd.DataFrame([[0,0,0],[1,1,0],[2,2,0]],columns=['Time (s)','Latitude','Longitude']),
                                                 pd.DataFrame([[0,-1,0],[1,1.5,0],[2,1,0]],columns=['Time (s)','Latitude','Longitude'])),
-                                                (0.333,1))
+                                                (0.333,0))
         
         
 

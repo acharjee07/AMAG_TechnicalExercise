@@ -27,3 +27,7 @@ here csv file needs to be in this format:
 | 3 | -27.93454934 |  0 |153.3911746 |
  
 
+
+ Here is the flow diagram of the logic of the program
+
+![Architecure Diagram](archdiagram.png)
