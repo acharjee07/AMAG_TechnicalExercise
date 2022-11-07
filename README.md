@@ -6,15 +6,12 @@
 
 
 
-to get the leader in each timestamp run
+to get the leader in each timestamp and also the minimum TTC (time to collision)
 ```bash
-   python leader_follower.py path_to/trajectory1.csv pathto/trajectory2.csv
+   python trajectory_processor.py path_to/trajectory1.csv path_to/trajectory2.csv
 ```
 
-to get the Minimum TTC
-```bash
-   python TTC.py path_to/trajectory1.csv pathto/trajectory2.csv
-```
+
 
 here the data needs to be in the format(CSV)
 
