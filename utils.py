@@ -3,6 +3,7 @@ import numpy as np
 
 
 class CoordinateProcessor():
+    """ contains all the necessary funtions for processing cordinates"""
     
 
     def haversine_dist(self,c1, c2):

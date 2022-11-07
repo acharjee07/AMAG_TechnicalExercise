@@ -8,6 +8,7 @@ import argparse
 
 
 class TrajectoryProcessor():
+    """ contains all the necessery funtion for processing trajectories"""
     def __init__(self):
         self.result_str_dict={
     -1: 'Vehicles moving opposite',
